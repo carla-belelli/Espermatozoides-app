@@ -1,0 +1,4 @@
+[server]
+maxUploadSize = 2042  # Tamaño en MB, aquí se establece a 2 GB
+enableCORS=false
+enableXsrfProtection = false
