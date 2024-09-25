@@ -1,8 +1,8 @@
 ﻿streamlit
 opencv-python
-numpy==1.23.5
+numpy
 ultralytics
-boxmot==10.0.77
+boxmot
 matplotlib
 pandas
 moviepy
