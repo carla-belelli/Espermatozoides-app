@@ -69,6 +69,7 @@ def main_app():
 
                 # Determinar si este video debe quitarse el fondo comparando los nombres de los archivos
                 quitar_fondo_video = video_name in videos_seleccionados  # Comparar por nombre de archivo
+                st.write("Modificado")
 
                 #Procesar el video
                 progress_text.text(f"Procesando video {idx + 1} de {len(uploaded_files)}...")
