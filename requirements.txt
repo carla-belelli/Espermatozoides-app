@@ -2,7 +2,7 @@
 opencv-python
 numpy==1.23.5
 ultralytics
-boxmot
+boxmot==10.0.77
 matplotlib
 pandas
 moviepy
