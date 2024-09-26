@@ -45,9 +45,9 @@ streamlit run app.py
 ```
 
 ### Recomendaciones
-- Asegúrate de tener Python 3.8 o superior.
+- Asegúrate de tener Python 3.9 o superior. Puedes descargarlo mediante el siguiente link: https://www.python.org/ftp/python/3.9.0/python-3.9.0.exe
 - En macOS, instala `ffmpeg` con Homebrew:
   ```bash
   brew install ffmpeg
   ```
-- Usa Visual Studio Code con la extensión de Python para facilitar el desarrollo.
+
