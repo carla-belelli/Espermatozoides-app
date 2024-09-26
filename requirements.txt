@@ -1,5 +1,6 @@
 ﻿streamlit
 opencv-python-headless
+libgl1
 numpy
 ultralytics
 boxmot
