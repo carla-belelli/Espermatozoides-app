@@ -15,7 +15,7 @@ def mostrar_instrucciones():
         2. **Verificar Disponibilidad de GPU**: Activa la opción "¿Verificar disponibilidad de GPU?" si deseas utilizar la GPU para el procesamiento. Si no hay GPU disponible, se usará la CPU automáticamente.
         3. **Configuración de Parámetros**: Ingresa los siguientes parámetros:
            - **Confianza (Confidence)**: Umbral de confianza para la detección (valor entre 0.0 y 1.0, se recomienda comenzar con un valor de 0.1).
-           - **Número de Frames (Num Frames)**: Total de frames a procesar (recomendamos un número que represente una buena muestra del video).
+           - **Número de Frames (Num Frames)**: Total de frames a procesar (se recomienda un número que represente una buena muestra del video).
            - **Número Mínimo de Puntos en Trayectorias (Min Points)**: Cantidad mínima de puntos para considerar una trayectoria válida.
            - **Conversión de Píxeles a Micrómetros**: Factor para convertir distancias de píxeles a micrómetros (por defecto: 1.30).
            - **Distancia Umbral para Trayectorias**: Define el umbral para verificar que la distancia entre las coordenadas (x, y) de los puntos en la trayectoria no sea excesiva. Si la distancia es muy grande, podría indicar que se está tomando la coordenada de otro espermatozoide.
