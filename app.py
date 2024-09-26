@@ -9,8 +9,8 @@ from calculo_parametros import (
     calcular_dimension_fractal
 )
 from generar_resultados import (generar_dataframes_trayectorias, generar_informe , generar_zipfile, crear_video_con_trayectorias, graficar_distribucion_categorias)
+from moviepy.editor import VideoFileClip
 
-# Función principal de la aplicación
 def main_app():
     st.title("Detección y Seguimiento de Espermatozoides")
     
@@ -22,17 +22,6 @@ def main_app():
     tracker = seleccionar_tracker(device)
     quitar_fondo, videos_seleccionados = pregunta_quitar_fondo(uploaded_files)
     
-    # Video de demostración
-    demo_path = (r"C:\Users\fede\Documents\carla_nd2\videonuevo2_Trayectorias_colores.mp4")
-    
-    video_demo_shown = True
-    if not uploaded_files:
-        video_file = open(demo_path, "rb")
-        video_demo = video_file.read()
-        st.video(video_demo)
-        video_file.close()
-    else:
-        video_demo_shown = False
     # Crear espacio vacío para los frames
     stframe = st.empty()
 
@@ -69,8 +58,7 @@ def main_app():
 
                 # Determinar si este video debe quitarse el fondo comparando los nombres de los archivos
                 quitar_fondo_video = video_name in videos_seleccionados  # Comparar por nombre de archivo
-                st.write("Modificado")
-
+                
                 #Procesar el video
                 progress_text.text(f"Procesando video {idx + 1} de {len(uploaded_files)}...")
                 video_bytes, sperm_counts, track_history, last_frame, output_file, tiempo_total, video_info, bbox_sizes, fps, trajectory_data, frames_a_colorear = procesar_video(video_file, confidence, stframe, progress_text, max_dist_threshold, num_frames=num_frames, device=device, quitar_fondo=quitar_fondo_video, tracker=tracker)
@@ -132,7 +120,7 @@ def main_app():
                     )
                 
             st.write("Procesamiento completado.")
-        if not video_demo_shown:
+        #if not video_demo_shown:
             st.empty()  # Elimina el video de demostración de la pantalla principal
 
 # Control de flujo de la aplicación

@@ -4,6 +4,7 @@ from ultralytics import YOLO
 from collections import defaultdict
 import tempfile
 from nd2reader import ND2Reader
+import streamlit as st
 from utils import normalizar_y_convertir , quitar_fondo_estático
 
 
@@ -98,9 +99,15 @@ def procesar_video(video_path, confidence, stframe, progress_text, max_dist_thre
     # Retornar los datos procesados
     return video_bytes, sperm_counts, track_history, last_frame, output_file, tiempo_total, video_info, bbox_sizes, fps, trajectory_data, frames_a_colorear
 
+@st.cache_data(show_spinner=False)
+def cargar_modelo_yolo():
+    # Cargar el modelo YOLO una sola vez y cachearlo
+    yolo_model = YOLO(r'C:\Users\fede\Documents\carla_nd2\bestyolov9me100b16(mejorr94.8).pt')  # Ruta del modelo
+    return yolo_model
+
 def detectar_espermatozoides(frame, confidence, device):
     # Cargar el modelo YOLO para la detección
-    yolo_model = YOLO(r'C:\Users\fede\Documents\carla_nd2\bestyolov9me100b16(mejorr94.8).pt')  # Ruta del modelo
+    yolo_model = cargar_modelo_yolo()
     # Realizar la detección usando YOLO
     results = yolo_model(frame, max_det=1000, conf=confidence, device=device, imgsz=640)
     
@@ -216,7 +223,8 @@ def procesar_video(video_path, confidence, stframe, progress_text, max_dist_thre
         with ND2Reader(video_path) as nd2_reader:
             frame_count = nd2_reader.metadata['num_frames']
             height, width = nd2_reader.metadata['height'], nd2_reader.metadata['width']
-            fps = int(nd2_reader.frame_rate)  # Asumiendo 100 FPS
+            #fps = int(nd2_reader.frame_rate)  # Asumiendo 100 FPS
+            fps= 100
             tiempo_total = frame_count / fps
             if num_frames is not None:
                 tiempo_total = num_frames / fps
