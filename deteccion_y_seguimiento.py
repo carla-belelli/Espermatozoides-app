@@ -102,7 +102,7 @@ def procesar_video(video_path, confidence, stframe, progress_text, max_dist_thre
 @st.cache_data(show_spinner=False)
 def cargar_modelo_yolo():
     # Cargar el modelo YOLO una sola vez y cachearlo
-    yolo_model = YOLO(r'C:\Users\fede\Documents\carla_nd2\bestyolov9me100b16(mejorr94.8).pt')  # Ruta del modelo
+    yolo_model = YOLO(r'yolov9espermatozoides.pt')  # Ruta del modelo
     return yolo_model
 
 def detectar_espermatozoides(frame, confidence, device):
