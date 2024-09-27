@@ -3,7 +3,7 @@
 
 ## Descripción
 
-La aplicación permite analizar videos de espermatozoides para evaluar su movimiento y comportamiento. Utiliza YOLO como algoritmo de detección y OC-SORT o BoxMOT como algoritmos de seguimiento para identificar y rastrear las trayectorias. Ofrece una interfaz interactiva en Streamlit para cargar videos, ajustar parámetros de análisis y visualizar resultados como trayectorias, parámetros cinéticos y categorías de movimiento. Es una herramienta útil para investigaciones en biología y salud reproductiva.
+La aplicación permite analizar videos de espermatozoides para evaluar su movimiento y comportamiento. Utiliza YOLO como algoritmo de detección y OC-SORT o BoT-SORT como algoritmos de seguimiento para identificar y rastrear las trayectorias. Ofrece una interfaz interactiva en Streamlit para cargar videos, ajustar parámetros de análisis y visualizar resultados como trayectorias, parámetros cinéticos y categorías de movimiento. Es una herramienta útil para investigaciones en biología y salud reproductiva.
 
 ## Instrucciones de Instalación
 
