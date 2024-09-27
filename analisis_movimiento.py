@@ -62,7 +62,7 @@ def procesar_detecciones_y_caracteristicas(video_info, uploaded_files, idx, outp
                                           id_ not in ids_con_bbox_repetido and
                                           id_ not in present_ids_inmoviles]
     
-    st.markdown(f"- **De {cantidad_ids} IDs solo** {len(present_ids_con_suficientes_puntos)} **presentan al menos {min_puntos_trayectoria} puntos y son móviles progresivos. IDs:** {present_ids_con_suficientes_puntos}")
+    st.markdown(f"- **De {cantidad_ids} IDs solo** {len(present_ids_con_suficientes_puntos)} **presentan al menos {min_puntos_trayectoria} puntos y son móviles. IDs:** {present_ids_con_suficientes_puntos}")
     
     present_ids_mobiles_e_inmoviles = set(present_ids_con_suficientes_puntos) | set(present_ids_inmoviles) | set(ids_con_bbox_repetido)
     present_ids_sobrantes = set(present_ids) - present_ids_mobiles_e_inmoviles
