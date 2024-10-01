@@ -80,7 +80,7 @@ def main_app():
 
                 promedio_velocidad_lineal, promedio_velocidad_curvilinea, conteo_categorias, df_porcentajes = generar_estadisticas_trayectorias(total_velocidad_lineal, total_velocidad_curvilinea, num_trayectorias, present_ids_con_suficientes_puntos, categorias)
 
-                # Suponiendo que has calculado el último frame en last_frame
+                
                 dibujar_trayectorias(last_frame, categorias, present_ids_con_suficientes_puntos, track_history)        
                                   
                 # Generar los DataFrames y el buffer de Excel
