@@ -6,6 +6,7 @@ import tempfile
 from nd2reader import ND2Reader
 import streamlit as st
 from utils import normalizar_y_convertir , quitar_fondo_estático
+from config import seleccionar_tracker
 
 
 
@@ -49,7 +50,7 @@ def procesar_video(video_path, confidence, stframe, progress_text, max_dist_thre
 
         # Crear una lista de frames a colorear para el procesamiento visual
         frames_a_colorear = list(frames_nd2)
-
+        
         # Procesar cada frame del video
         for frame_number, frame in enumerate(frames_nd2):
             # Romper el bucle si se han procesado el número de frames especificado
@@ -63,6 +64,7 @@ def procesar_video(video_path, confidence, stframe, progress_text, max_dist_thre
             dets = detectar_espermatozoides(frame, confidence, device)
 
             # Actualizar el tracker con las detecciones del frame
+            
             tracks = tracker.update(dets, frame)
             sperm_count = len(dets)  # Contar el número de espermatozoides detectados
             sperm_counts.append(sperm_count)  # Agregar el conteo a la lista
@@ -75,7 +77,7 @@ def procesar_video(video_path, confidence, stframe, progress_text, max_dist_thre
             frame, track_history, bbox_sizes, trajectory_data, last_frame = seguir_trayectorias(
                 tracks, frame, last_frame, track_history, track_initialized, max_dist_threshold, trajectory_data, bbox_sizes, frame_number
             )
-
+            
             # Escribir el frame procesado en el archivo de salida
             out.write(frame)
 
@@ -191,6 +193,7 @@ def seguir_trayectorias(tracks, frame, last_frame, track_history, track_initiali
 
         # Retornar el frame procesado, el historial de seguimiento, tamaños de las bounding boxes, 
         # datos de trayectoria y el último frame
+        
     return frame, track_history, bbox_sizes, trajectory_data, last_frame
 
 
@@ -217,77 +220,4 @@ def encontrar_centroide(image, bounding_box):
             centroides.append((cx, cy))  # Agregar el centroide a la lista
 
     return centroides  # Retornar la lista de centroides encontrados
-
-
-tiempo_total=[] 
-def procesar_video(video_path, confidence, stframe, progress_text, max_dist_threshold, num_frames=None, device=None, quitar_fondo=None, tracker=None):
-        with ND2Reader(video_path) as nd2_reader:
-            frame_count = nd2_reader.metadata['num_frames']
-            height, width = nd2_reader.metadata['height'], nd2_reader.metadata['width']
-            #fps = int(nd2_reader.frame_rate)  # Asumiendo 100 FPS
-            fps= 100
-            tiempo_total = frame_count / fps
-            if num_frames is not None:
-                tiempo_total = num_frames / fps
-
-            output_file = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            out = cv2.VideoWriter(output_file.name, fourcc, fps, (width, height))
-
-            track_history = defaultdict(lambda: [])
-            track_initialized = {}
-            sperm_counts = []
-            trajectory_data = []
-            bbox_sizes = defaultdict(list)
-            frame_number = 0
-            last_frame = None
-
-            frames_list = [frame for frame in nd2_reader]
-            frames_nd2 = np.array([normalizar_y_convertir(frame) for frame in frames_list])
-
-            if quitar_fondo:
-                frames_nd2 = quitar_fondo_estático(frames_nd2, frame_count)
-
-            frames_a_colorear = list(frames_nd2)
-
-            for frame_number, frame in enumerate(frames_nd2):
-                if num_frames is not None and frame_number >= num_frames:
-                    break
-
-                progress_text.text(f"Procesando frame: {frame_number + 1} / {min(frame_count, num_frames) if num_frames else frame_count}")
-
-                # Detectar espermatozoides
-                dets = detectar_espermatozoides(frame, confidence, device)
-
-                # Actualizar el tracker con las detecciones
-                tracks = tracker.update(dets, frame)
-                sperm_count = len(dets)
-                sperm_counts.append(sperm_count)
-
-                if sperm_count > 500:
-                    stframe.warning("ATENCIÓN: Demasiados espermatozoides detectados (más de 500).")
-
-                # Seguir trayectorias
-                frame, track_history, bbox_sizes, trajectory_data, last_frame = seguir_trayectorias(tracks, frame, last_frame, track_history, track_initialized, max_dist_threshold, trajectory_data, bbox_sizes, frame_number)
-
-                # Escribir el frame procesado
-                out.write(frame)
-
-            out.release()
-
-            with open(output_file.name, "rb") as f:
-                video_bytes = f.read()
-
-            video_info = {
-                'Número de Frames': frame_count,
-                'Número de Frames a procesar': min(frame_count, num_frames) if num_frames else frame_count,
-                'Resolución': f'{width}x{height}',
-                'FPS': fps,
-                'Tiempo Total a analizar (s)': tiempo_total
-            }
-            # Eliminar el texto de progreso una vez que se termine el procesamiento
-            progress_text.empty()
-
-        return video_bytes, sperm_counts, track_history, last_frame, output_file, tiempo_total, video_info, bbox_sizes, fps, trajectory_data, frames_a_colorear
-
 

@@ -44,7 +44,7 @@ def quitar_fondo_estático(frames_nd2, frame_count):
         """
         # Inicializa la matriz para el fondo con la mediana
         processed_array = np.zeros((y, x, channels), dtype=frames_nd2.dtype)
-        progress_text.text("Calculando fondo")  # Mensaje de progreso
+        progress_text.text("Calculando fondo estático")  # Mensaje de progreso
 
         # Itera sobre cada canal
         for ch in range(channels):
@@ -134,3 +134,17 @@ def guardar_y_eliminar_video_temporal(output_file):
             # st.write("Archivo eliminado exitosamente.")
     except Exception as e:
         st.warning(f"No se pudo eliminar el archivo: {e}")  # Muestra una advertencia si no se pudo eliminar el archivo
+
+
+def guardar_resultados(video_bytes, video_info, sperm_counts, track_history, last_frame, bbox_sizes, trajectory_data, 
+                       video_byte_list, all_video_info, all_sperm_counts, all_track_histories, all_last_frames, all_bbox_sizes, all_trajectory_data):
+    # Guardar los resultados en las listas correspondientes
+    video_byte_list.append(video_bytes)
+    all_video_info.append(video_info)
+    all_sperm_counts.append(sperm_counts)
+    all_track_histories.append(track_history)
+    all_last_frames.append(last_frame)
+    all_bbox_sizes.append(bbox_sizes)
+    all_trajectory_data.append(trajectory_data)
+
+    return video_byte_list, all_video_info, all_sperm_counts, all_track_histories, all_last_frames, all_bbox_sizes, all_trajectory_data

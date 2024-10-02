@@ -158,7 +158,7 @@ def generar_informe(video_info, idx,
     # Información general del video
     
     pdf.set_font("Arial", 'B', 14)
-    pdf.cell(0, 10, f'Características del Video {idx + 1}:', 0, 1)
+    pdf.cell(0, 10, f'Características del Video:', 0, 1)
 
     pdf.set_font("Arial", '', 12)
     for key, value in video_info.items():

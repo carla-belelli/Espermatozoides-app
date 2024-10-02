@@ -51,34 +51,11 @@ def configurar_parametros():
     return confidence, num_frames, min_puntos_trayectoria, pixeles_a_micrómetros, max_dist_threshold
 
 # Función para seleccionar e inicializar el tracker
-def seleccionar_tracker(device):
-    # Crear un menú desplegable para seleccionar el tipo de tracker
+def seleccionar_tracker():
+    
     tracker_option = st.sidebar.selectbox("Seleccione el tracker:", ["OCSORT", "BoTSORT"])
 
-    # Inicializar el tracker según la selección del usuario
-    if tracker_option == "OCSORT":
-        # Configurar el tracker OCSORT con parámetros específicos
-        tracker = OCSORT(det_thresh=0.6, max_age=50, asso_threshold=0.2, delta_t=1, min_hits=1, use_byte=True)
-    elif tracker_option == "BoTSORT":
-        # Configurar el tracker BoTSORT con parámetros específicos y el modelo de pesos
-        tracker = BoTSORT(
-            model_weights=Path('osnet_x0_25_msmt17.pt'),  # Cambiar según tu modelo
-            device=device,  # Especificar el dispositivo (GPU o CPU)
-            fp16=False,
-            track_high_thresh=0.5,
-            track_low_thresh=0.1,
-            new_track_thresh=0.6,
-            track_buffer=50,
-            match_thresh=0.8,
-            proximity_thresh=0.3,
-            appearance_thresh=0.25,
-            cmc_method='sof',
-            frame_rate=100,
-            fuse_first_associate=False,
-            with_reid=True
-        )
-    
-    return tracker  # Retornar el tracker inicializado
+    return tracker_option
 
 # Función separada para quitar el fondo estático
 def pregunta_quitar_fondo(uploaded_files):
