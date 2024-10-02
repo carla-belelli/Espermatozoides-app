@@ -18,8 +18,8 @@ def procesar_video(video_path, confidence, stframe, progress_text, max_dist_thre
         # Obtener la cantidad total de frames y las dimensiones del video
         frame_count = nd2_reader.metadata['num_frames']
         height, width = nd2_reader.metadata['height'], nd2_reader.metadata['width']
-        #fps = int(nd2_reader.frame_rate) 
-        fps = 100 # Asumiendo que la tasa de frames es de 100 FPS
+        fps = int(nd2_reader.frame_rate) 
+        #fps = 100 # Asumiendo que la tasa de frames es de 100 FPS
         tiempo_total = frame_count / fps  # Calcular el tiempo total en segundos
 
         # Si se especifica num_frames, ajustar el tiempo total
