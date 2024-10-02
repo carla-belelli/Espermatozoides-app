@@ -20,7 +20,7 @@ cd Espermatozoides-app
 ### 2. Crear y Activar un Entorno Virtual
 Crea un entorno virtual:
 ```bash
-python -m venv env
+py -m venv env
 ```
 Activa el entorno virtual:
 - **Windows**:
@@ -45,7 +45,7 @@ streamlit run app.py
 ```
 
 ### Recomendaciones
-- Asegúrate de tener Python 3.9 o superior y git. Puedes descargarlos mediante los siguients links: https://www.python.org/ftp/python/3.9.0/python-3.9.0.exe y https://git-scm.com/downloads 
+- Asegúrate de tener Python 3.9 o superior y git. Puedes descargarlos mediante los siguients links: https://www.python.org/ftp/python/3.9.0/python-3.9.0-amd64.exe y https://git-scm.com/downloads 
 - En macOS, instala `ffmpeg` con Homebrew:
   ```bash
   brew install ffmpeg

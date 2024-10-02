@@ -8,5 +8,6 @@ pandas==2.1.0
 moviepy==1.0.3
 nd2reader==3.3.0
 fpdf==1.7.2
-torch==2.2.2
+torch==2.4.1
 Pillow==10.0.0
+xlsxwriter

@@ -122,10 +122,7 @@ def main_app():
                 report_path = generar_informe(video_info, idx, sperm_counts, track_history, bbox_sizes, moda_unica, media, cantidad_ids, ids_con_bbox_repetido, min_puntos_trayectoria, present_ids_inmoviles, present_ids_con_suficientes_puntos, present_ids_sobrantes, df_trayectorias, df_porcentajes, fig, promedio_velocidad_lineal, promedio_velocidad_curvilinea, conteo_categorias, last_frame, output_dir='informes')
                 # Agregar el camino del informe a la lista
                 report_paths.append(report_path)
-                
-                #track_history = defaultdict(lambda: [])
-                for key, value in track_history.items():
-                    print(key)
+
                 progress_text.empty()
             
             # Generar ZIP con informes, videos y excel
