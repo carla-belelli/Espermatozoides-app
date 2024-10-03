@@ -38,7 +38,7 @@ def procesar_detecciones_y_caracteristicas(video_info, uploaded_files, idx, outp
         size_counts = Counter(sizes)
         
         # Ajustar el valor de x basado en num_frames
-        if num_frames <= 500:
+        if num_frames <= 150:
             x = num_frames / 5
         else:
             x = num_frames / 10  # Valor predeterminado para num_frames > 500

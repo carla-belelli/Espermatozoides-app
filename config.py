@@ -13,6 +13,7 @@ def cargar_videos():
 # Función para verificar si usar GPU o CPU
 def seleccionar_dispositivo():
     # Crear una casilla de verificación en la barra lateral para verificar la disponibilidad de GPU
+    print(torch.cuda.is_available())
     check_gpu = st.sidebar.checkbox("¿Verificar disponibilidad de GPU?", value=False)
 
     if check_gpu:

@@ -71,7 +71,7 @@ def procesar_video(video_path, confidence, stframe, progress_text, max_dist_thre
 
             # Advertencia si se detectan demasiados espermatozoides
             if sperm_count > 500:
-                stframe.warning("ATENCIÓN: Demasiados espermatozoides detectados (más de 500).")
+                stframe.warning("ATENCIÓN: Demasiados espermatozoides detectados (más de 500). Esto puede afectar el rendimiento y la precisión del análisis.")
 
             # Seguir trayectorias de los espermatozoides detectados
             frame, track_history, bbox_sizes, trajectory_data, last_frame = seguir_trayectorias(
