@@ -12,7 +12,7 @@ from boxmot import BoTSORT
 from pathlib import Path
 
 def main_app():
-    st.title("Detección y Seguimiento de Espermatozoides")
+    st.title("Detección y Análisis de Motilidad Espermática")
     
     # Inicialización de variables
     video_paths = [] # Lista para almacenar los paths de los videos subidos

@@ -6,7 +6,7 @@ from moviepy.editor import VideoFileClip
 
 # Función para mostrar las instrucciones de uso
 def mostrar_instrucciones():
-    st.title("Bienvenido a la Herramienta de Detección y Seguimiento de Espermatozoides")
+    st.title("Bienvenido a la Herramienta de Detección y Análisis de Motilidad Espermática")
     st.write("""
         Esta aplicación permite procesar videos para detectar y analizar trayectorias de espermatozoides.
 
