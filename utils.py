@@ -8,7 +8,7 @@ from moviepy.editor import VideoFileClip
 def mostrar_instrucciones():
     st.title("Bienvenido a la Herramienta de Detección y Análisis de Motilidad Espermática")
     st.write("""
-        Esta aplicación permite procesar videos para detectar y analizar trayectorias de espermatozoides.
+        Esta aplicación permite detectar espermatozoides y analizar su movimiento en función de sus trayectorias.
 
         ### Instrucciones de Uso
         1. **Cargar Videos**: Utiliza el botón "Sube un video" en la barra lateral para seleccionar uno o varios archivos de video en formato ND2.
