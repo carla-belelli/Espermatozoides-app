@@ -19,7 +19,7 @@ def procesar_detecciones_y_caracteristicas(video_info, uploaded_files, idx, outp
     st.subheader(f"Características del Video: {file_name}")
     for key, value in video_info.items():
         st.markdown(f"- **{key}:** {value}")
-    
+    cantidad_ids = len(track_history)
     # 2. Calcular la moda y media de los conteos de espermatozoides
     st.write(sperm_counts)
     if sperm_counts:
@@ -29,6 +29,7 @@ def procesar_detecciones_y_caracteristicas(video_info, uploaded_files, idx, outp
         media = np.mean(sperm_counts)
         st.subheader('Resultados:')
         st.markdown(f"- **Se ha encontrado en promedio** {int(media)} **espermatozoides por frame**")
+        st.markdown(f"- **Se tiene un total de** {cantidad_ids} **IDs**")
     
     # 3. Mostrar IDs con bbox repetidos
     present_ids = list(track_history.keys())
@@ -38,22 +39,21 @@ def procesar_detecciones_y_caracteristicas(video_info, uploaded_files, idx, outp
         size_counts = Counter(sizes)
         
         # Ajustar el valor de x basado en num_frames
-        if num_frames <= 150:
-            x = num_frames / 5
-        else:
-            x = num_frames / 10  # Valor predeterminado para num_frames > 500
+        #if num_frames <= 150:
+        #    x = num_frames / 10
+        #else:
+        x = num_frames / 10  
         
         # Verificar si algún tamaño de bbox se repite más de x veces
         if any(count > x for count in size_counts.values()):
             ids_con_bbox_repetido.append(id_)
     
-    st.markdown(f"- **IDs Muertos** {len(ids_con_bbox_repetido)}: {ids_con_bbox_repetido}")
+    #st.markdown(f"- **IDs Muertos** {len(ids_con_bbox_repetido)}: {ids_con_bbox_repetido}")
+    st.markdown(f"- **De {cantidad_ids} IDs hay** {len(ids_con_bbox_repetido)} **muertos. IDs:** {ids_con_bbox_repetido}")
     
-    # 4. Filtrar IDs inmóviles y progresivos
-    cantidad_ids = len(track_history)
-    
+    # 4. Filtrar IDs inmóviles y progresivos  
     present_ids_inmoviles = [id_ for id_ in present_ids if len(track_history[id_]) > 1 and
-                             (calcular_distancia_lineal(track_history[id_][0], track_history[id_][-1]) * pixeles_a_micrómetros) < 8 and
+                             (calcular_distancia_lineal(track_history[id_][0], track_history[id_][-1]) * pixeles_a_micrómetros) < 10 and
                              id_ not in ids_con_bbox_repetido]
     
     st.markdown(f"- **De {cantidad_ids} IDs hay** {len(present_ids_inmoviles)} **que poseen cabeza fija. IDs:** {present_ids_inmoviles}")
@@ -66,7 +66,7 @@ def procesar_detecciones_y_caracteristicas(video_info, uploaded_files, idx, outp
     
     present_ids_mobiles_e_inmoviles = set(present_ids_con_suficientes_puntos) | set(present_ids_inmoviles) | set(ids_con_bbox_repetido)
     present_ids_sobrantes = set(present_ids) - present_ids_mobiles_e_inmoviles
-    st.markdown(f"- **De {cantidad_ids} IDs, hay** {len(present_ids_sobrantes)} **que no cumplen con ninguna de las dos condiciones. IDs:** {list(present_ids_sobrantes)}")
+    st.markdown(f"- **De {cantidad_ids} IDs, hay** {len(present_ids_sobrantes)} **que no cumplen con el criterio del análisis. IDs:** {list(present_ids_sobrantes)}")
     
     return moda_unica, media, cantidad_ids, present_ids_sobrantes, present_ids_con_suficientes_puntos, present_ids_inmoviles, ids_con_bbox_repetido
 
@@ -179,7 +179,7 @@ def generar_estadisticas_trayectorias(total_velocidad_lineal, total_velocidad_cu
     st.markdown(f"- **Promedio de Velocidad Curvilínea [µm/s]:** {promedio_velocidad_curvilinea:.2f}")
 
     # Mostrar el conteo de espermatozoides por cada categoría
-    st.subheader('Resultados de la Trayectoria de Espermatozoides: ')
+    st.subheader('Clasificación de Movimientos de Espermatozoides ')
     st.write(f"De {len(present_ids_con_suficientes_puntos)} espermatozoides, se han encontrado {conteo_categorias.get('Movimiento Lineal', 0)} espermatozoides que presentan trayectoria lineal, "
     f"{conteo_categorias.get('Movimiento Transicional', 0)} transicional, y "
     f"{conteo_categorias.get('Movimiento Hiperactivado', 0)} hiperactivado.")

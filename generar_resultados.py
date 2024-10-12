@@ -59,7 +59,7 @@ def generar_zipfile(report_paths, video_bytes_list, excel_buffers, uploaded_file
 def crear_video_con_trayectorias(frames_a_colorear, categorias, present_ids_con_suficientes_puntos, track_history, output_pathvideo, fps, num_frames):
     # Crear un mapa de colores para los tipos de movimiento
     color_map = {
-        'Movimiento Lineal': (86, 2, 178),      # Rojo
+        'Movimiento Lineal': (86, 2, 178),      # Rosa oscuro
         'Movimiento Transicional': (0, 255, 255), # Amarillo
         'Movimiento Hiperactivado': (255, 0, 0)  # Azul
     }
@@ -317,7 +317,7 @@ def generar_dataframes_trayectorias(datos_trayectorias, trajectory_data, pixeles
     # Devolver los DataFrames y el buffer
     return df_trayectorias, trajectory_df, buffer
 
-##VER SI QUEREMOS O NO LA GRAFICA DE DISTRIBUCION CATEGORIAS
+##GRAFICA DE DISTRIBUCION CATEGORIAS
 def graficar_distribucion_categorias(conteo_categorias):
     fig, ax = plt.subplots()
     ax.bar(conteo_categorias.keys(), conteo_categorias.values(), color=['red', 'yellow', 'blue'])

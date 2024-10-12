@@ -1,26 +1,4 @@
-import streamlit as st
-import cv2
 import numpy as np
-from ultralytics import YOLO
-from collections import defaultdict
-from collections import Counter
-from pathlib import Path
-import tempfile
-import os
-from boxmot import BoTSORT
-import matplotlib.pyplot as plt
-import pandas as pd
-from moviepy.editor import VideoFileClip
-from boxmot import HybridSORT
-from boxmot import OCSORT
-import io
-from nd2reader import ND2Reader
-from fpdf import FPDF
-import zipfile
-from io import BytesIO
-from PIL import Image
-import torch
-from moviepy.editor import ImageSequenceClip
 
 # Función para calcular la distancia lineal entre dos puntos
 def calcular_distancia_lineal(p1, p2):

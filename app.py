@@ -6,7 +6,6 @@ from deteccion_y_seguimiento import procesar_video
 from analisis_movimiento import procesar_detecciones_y_caracteristicas , calcular_y_clasificar_trayectorias, generar_estadisticas_trayectorias, dibujar_trayectorias
 from calculo_parametros import calcular_distancia_lineal, calcular_dimension_fractal
 from generar_resultados import generar_dataframes_trayectorias, generar_informe , generar_zipfile, crear_video_con_trayectorias, graficar_distribucion_categorias
-from collections import defaultdict
 from boxmot import OCSORT
 from boxmot import BoTSORT
 from pathlib import Path
@@ -18,12 +17,13 @@ def main_app():
     video_paths = [] # Lista para almacenar los paths de los videos subidos
     uploaded_files = cargar_videos() #Módulo config.py: se encarga de cargar los videos subidos por el usuario
     device = seleccionar_dispositivo() #Módulo config.py: permite seleccionar el dispositivo de procesamiento (CPU o GPU)
-    confidence, num_frames, min_puntos_trayectoria, pixeles_a_micrómetros, max_dist_threshold = configurar_parametros() #Módulo config.py: configuración de parámetros generales
+    confidence, num_frames, min_puntos_trayectoria, pixeles_a_micrómetros, max_dist_umbral = configurar_parametros() #Módulo config.py: configuración de parámetros generales
     tracker_selected = seleccionar_tracker() #Módulo config.py: selecciona el tipo de tracker a utilizar segun preferencias
     quitar_fondo, videos_seleccionados = pregunta_quitar_fondo(uploaded_files) #Módulo config.py: opción para quitar fondo estático antes de la detección
     
     stframe = st.empty() # Espacio para mostrar frames
-    progress_text = st.empty() # Espacio para mostrar progreso
+    progress_video = st.empty()  # Espacio para mostrar progreso del video
+    progress_frame = st.empty()  # Espacio para mostrar progreso de los frames
     
     # Crear archivo temporal para almacenar el video subido
     if uploaded_files:
@@ -50,25 +50,29 @@ def main_app():
                                 track_high_thresh=0.5,
                                 track_low_thresh=0.1,
                                 new_track_thresh=0.6,
-                                track_buffer=50,
+                                track_buffer=100,
                                 match_thresh=0.8,
-                                proximity_thresh=0.3,
+                                proximity_thresh=0.5,
                                 appearance_thresh=0.25,
                                 cmc_method='sof',
                                 frame_rate=100,
-                                fuse_first_associate=False,
+                                fuse_first_associate=True,
                                 with_reid=True
                             )
                 else:
-                    tracker = OCSORT(det_thresh=0.6, max_age=50, asso_threshold=0.2, delta_t=1, min_hits=1, use_byte=True)
+                    tracker = OCSORT(det_thresh=0.6, max_age=100, asso_threshold=0.2, delta_t=1, min_hits=1, use_byte=True)
                 # Determinar si este video debe quitarse el fondo comparando los nombres de los archivos
-                quitar_fondo_video = video_name in videos_seleccionados  # Comparar por nombre de archivo
+                                # Determinar si este video debe quitarse el fondo comparando los nombres de los archivos
+                if len(uploaded_files) > 1:
+                    quitar_fondo_video = video_name in videos_seleccionados  # Comparar por nombre de archivo
+                else:
+                    quitar_fondo_video = quitar_fondo  # Si solo hay un video, usar directamente la opción de checkbox
                 
                 #Procesar el video
-                progress_text.text(f"Procesando video {idx + 1} de {len(uploaded_files)}...") # Mostrar progreso
+                progress_video.text(f"Procesando video {idx + 1} de {len(uploaded_files)}...")  # Mostrar progreso del video
                 # Procesa el video y devuelve varios datos importantes para los siguientes pasos
                 video_bytes, sperm_counts, track_history, last_frame, output_file, tiempo_total, video_info, bbox_sizes, fps, trajectory_data, frames_a_colorear = procesar_video(
-                    video_file, confidence, stframe, progress_text, max_dist_threshold, num_frames=num_frames, 
+                    video_file, confidence, stframe, progress_frame, max_dist_umbral, num_frames=num_frames, 
                     device=device, quitar_fondo_video=quitar_fondo_video, tracker=tracker
                 )
                 # Llamamos a la función guardar_resultados para almacenar los resultados en las listas
@@ -104,7 +108,7 @@ def main_app():
                 excel_buffers.append(buffer)  # Almacenar el buffer en la lista
 
                 # Mostrar el cuadro procesado con las trayectorias categorizadas
-                st.image(last_frame)
+                #st.image(last_frame)
                 fig = graficar_distribucion_categorias(conteo_categorias)
 
                 # Crear y Guardar el video con trayectorias coloreadas
@@ -123,13 +127,13 @@ def main_app():
                 # Agregar el camino del informe a la lista
                 report_paths.append(report_path)
 
-                progress_text.empty()
+                progress_video.empty()
             
             # Generar ZIP con informes, videos y excel
             zip_path = generar_zipfile(report_paths,video_byte_list, excel_buffers,uploaded_files, videoscolores)
             with open(zip_path, "rb") as file:
                     st.download_button(
-                        label="Descargar Informe y Video",
+                        label="Descargar Resultados",
                         data=file,
                         file_name=zip_path,
                         mime="application/zip"

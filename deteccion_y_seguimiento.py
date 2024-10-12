@@ -6,20 +6,15 @@ import tempfile
 from nd2reader import ND2Reader
 import streamlit as st
 from utils import normalizar_y_convertir , quitar_fondo_estático
-from config import seleccionar_tracker
 
-
-
-tiempo_total=[] 
-
-def procesar_video(video_path, confidence, stframe, progress_text, max_dist_threshold, num_frames=None, device=None, quitar_fondo_video=None, tracker=None):
+def procesar_video(video_path, confidence, stframe, progress_frame, max_dist_umbral, num_frames=None, device=None, quitar_fondo_video=None, tracker=None):
     # Abrir el video utilizando ND2Reader
     with ND2Reader(video_path) as nd2_reader:
         # Obtener la cantidad total de frames y las dimensiones del video
         frame_count = nd2_reader.metadata['num_frames']
         height, width = nd2_reader.metadata['height'], nd2_reader.metadata['width']
         fps = int(nd2_reader.frame_rate) 
-        #fps = 100 # Asumiendo que la tasa de frames es de 100 FPS
+        tiempo_total=[] 
         tiempo_total = frame_count / fps  # Calcular el tiempo total en segundos
 
         # Si se especifica num_frames, ajustar el tiempo total
@@ -50,7 +45,6 @@ def procesar_video(video_path, confidence, stframe, progress_text, max_dist_thre
 
         # Crear una lista de frames a colorear para el procesamiento visual
         frames_a_colorear = list(frames_nd2)
-        
         # Procesar cada frame del video
         for frame_number, frame in enumerate(frames_nd2):
             # Romper el bucle si se han procesado el número de frames especificado
@@ -58,7 +52,7 @@ def procesar_video(video_path, confidence, stframe, progress_text, max_dist_thre
                 break
 
             # Actualizar el texto de progreso con el frame actual
-            progress_text.text(f"Procesando frame: {frame_number + 1} / {min(frame_count, num_frames) if num_frames else frame_count}")
+            progress_frame.text(f"Procesando frame: {frame_number + 1} / {min(frame_count, num_frames) if num_frames else frame_count}")
 
             # Detectar espermatozoides en el frame actual
             dets = detectar_espermatozoides(frame, confidence, device)
@@ -70,12 +64,12 @@ def procesar_video(video_path, confidence, stframe, progress_text, max_dist_thre
             sperm_counts.append(sperm_count)  # Agregar el conteo a la lista
 
             # Advertencia si se detectan demasiados espermatozoides
-            if sperm_count > 500:
-                stframe.warning("ATENCIÓN: Demasiados espermatozoides detectados (más de 500). Esto puede afectar el rendimiento y la precisión del análisis.")
+            if sperm_count > 300:
+                stframe.warning("ATENCIÓN: Demasiados espermatozoides detectados (más de 300). Esto puede afectar el rendimiento y la precisión del análisis.")
 
             # Seguir trayectorias de los espermatozoides detectados
             frame, track_history, bbox_sizes, trajectory_data, last_frame = seguir_trayectorias(
-                tracks, frame, last_frame, track_history, track_initialized, max_dist_threshold, trajectory_data, bbox_sizes, frame_number
+                tracks, frame, last_frame, track_history, track_initialized, max_dist_umbral, trajectory_data, bbox_sizes, frame_number
             )
             
             # Escribir el frame procesado en el archivo de salida
@@ -90,14 +84,14 @@ def procesar_video(video_path, confidence, stframe, progress_text, max_dist_thre
         # Crear un diccionario con información relevante del video procesado
         video_info = {
             'Número de Frames': frame_count,
-            'Número de Frames a procesar': min(frame_count, num_frames) if num_frames else frame_count,
+            'Número de Frames procesados': min(frame_count, num_frames) if num_frames else frame_count,
             'Resolución': f'{width}x{height}',
             'FPS': fps,
-            'Tiempo Total a analizar (s)': tiempo_total
+            'Tiempo Total analizado (s)': tiempo_total
         }
         
         # Eliminar el texto de progreso una vez que se termine el procesamiento
-        progress_text.empty()
+        progress_frame.empty()
 
     # Retornar los datos procesados
     return video_bytes, sperm_counts, track_history, last_frame, output_file, tiempo_total, video_info, bbox_sizes, fps, trajectory_data, frames_a_colorear
@@ -123,7 +117,7 @@ def detectar_espermatozoides(frame, confidence, device):
             
     return np.array(dets)  # Retornar detecciones como un arreglo NumPy
 
-def seguir_trayectorias(tracks, frame, last_frame, track_history, track_initialized, max_dist_threshold, trajectory_data, bbox_sizes, frame_number):
+def seguir_trayectorias(tracks, frame, last_frame, track_history, track_initialized, max_dist_umbral, trajectory_data, bbox_sizes, frame_number):
     # Extraer coordenadas y atributos de las trayectorias
     xyxys = tracks[:, 0:4].astype('int')  # Coordenadas de la bounding box
     ids = tracks[:, 4].astype('int')  # IDs de los objetos rastreados
@@ -175,7 +169,7 @@ def seguir_trayectorias(tracks, frame, last_frame, track_history, track_initiali
                     # Calcular la distancia euclidiana entre el último centroide registrado y el actual
                     dist = np.sqrt((cx - prev_cx)**2 + (cy - prev_cy)**2)
                     # Verificar si la distancia está dentro del umbral y es la mínima encontrada
-                    if dist <= max_dist_threshold and dist < min_dist:
+                    if dist <= max_dist_umbral and dist < min_dist:
                         min_dist = dist  # Actualizar la distancia mínima
                         closest_centroid = (cx, cy)  # Guardar el centroide más cercano
 
@@ -187,10 +181,10 @@ def seguir_trayectorias(tracks, frame, last_frame, track_history, track_initiali
                     trajectory_data.append({'ID': id, 'FRAME': frame_number, 'X': cx, 'Y': cy})
                     # Dibujar un pequeño círculo en el centroide detectado en el frame
                     cv2.circle(frame, (cx, cy), 1, (0, 0, 255), -1)
-
+                    cv2.polylines(frame, [np.array(track, dtype=np.int32)], isClosed=False, color=(0, 255, 0), thickness=1)
+                
                 # Actualizar el registro de centroides anteriores para el ID actual
                 prev_centroids[id] = centroides
-
         # Retornar el frame procesado, el historial de seguimiento, tamaños de las bounding boxes, 
         # datos de trayectoria y el último frame
         
