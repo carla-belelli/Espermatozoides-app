@@ -82,6 +82,7 @@ def quitar_fondo_estático(frames_nd2, frame_count):
     #for i, diff_frame_brillante in enumerate(diferencias):
         #stframe.image(diff_frame_brillante, caption=f"Frame {i+1}")  # Muestra cada frame procesado
         #stframe.empty()  # Limpia el espacio de imagen
+
     progress_text.empty()
     return diferencias  # Retorna la lista de frames con el fondo eliminado
 

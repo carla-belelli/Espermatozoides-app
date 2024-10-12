@@ -7,7 +7,14 @@ La aplicación permite analizar videos de espermatozoides para evaluar su movimi
 
 ## Instrucciones de Instalación
 
-### 1. Clonar el Repositorio
+### 1. Instalación Python y Git
+Descargar Python 3.9 o superior y git. Puedes descargarlos mediante los siguients links: https://www.python.org/ftp/python/3.9.0/python-3.9.0-amd64.exe y https://git-scm.com/downloads 
+- En macOS, instala `ffmpeg` con Homebrew:
+  ```bash
+  brew install ffmpeg
+  ```
+
+### 2. Clonar el Repositorio
 Abrir una terminal y clonar el repositorio:
 ```bash
 git clone https://github.com/carla-belelli/Espermatozoides-app.git
@@ -17,7 +24,7 @@ Navegar al directorio del proyecto:
 cd Espermatozoides-app
 ```
 
-### 2. Crear y Activar un Entorno Virtual
+### 3. Crear y Activar un Entorno Virtual
 Crea un entorno virtual:
 ```bash
 py -m venv env
@@ -32,22 +39,26 @@ Activa el entorno virtual:
   source env/bin/activate
   ```
 
-### 3. Instalar Dependencias
+### 4. Instalar Dependencias
 Instala las dependencias del proyecto:
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Ejecutar la Aplicación
+### 5. Ejecutar la Aplicación
 Inicia la aplicación con Streamlit: 
 ```bash
 streamlit run app.py
 ```
 
 ### Recomendaciones
-- Asegúrate de tener Python 3.9 o superior y git. Puedes descargarlos mediante los siguients links: https://www.python.org/ftp/python/3.9.0/python-3.9.0-amd64.exe y https://git-scm.com/downloads 
-- En macOS, instala `ffmpeg` con Homebrew:
-  ```bash
-  brew install ffmpeg
-  ```
-
+Automatiza la apertura de tu aplicación sin tener que pasar por la terminal manualmente, puedes crear un script que ejecute todos esos comandos de una sola vez
+En Windows: Crear un archivo Batch (.bat)
+```bash
+@echo off
+cd C:\ruta\completa\hacia\Espermatozoides-app
+git pull origin main
+call venv\Scripts\activate.bat
+streamlit run app.py
+pause
+```
